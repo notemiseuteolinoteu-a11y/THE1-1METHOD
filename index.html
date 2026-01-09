@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>THE 1:1 METHOD - Ebook</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;600;800&family=Montserrat:wght@400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- RESET & GLOBAL VARIABLES --- */
+        :root {
+            --primary: #E50914; /* YouTube Red */
+            --dark: #0f0f0f;
+            --gray: #1A1A1A;
+            --light-gray: #F5F5F5;
+            --white: #FFFFFF;
+            --accent: #1DB954; /* Green for success stats */
+            --font-title: 'Anton', sans-serif;
+            --font-head: 'Montserrat', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important; /* Force background colors printing */
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+            color: #333;
+            background: #ccc; /* Background for browser view only */
+        }
+
+        /* --- PAGE CONFIGURATION FOR PDF --- */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            background: var(--white);
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            margin-bottom: 0.5cm; /* Visual separator in browser */
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            page-break-after: always;
+        }
+
+        /* --- TYPOGRAPHY UTILS --- */
+        h1, h2, h3, h4 { margin: 0; }
+        p { line-height: 1.6; margin-bottom: 1rem; font-size: 11pt; }
+        
+        .text-red { color: var(--primary); }
+        .text-center { text-align: center; }
+        .text-bold { font-weight: 800; }
+        
+        /* --- LAYOUT COMPONENTS --- */
+        .content-area {
+            padding: 2.5cm;
+            height: 100%;
+            position: relative;
+        }
+
+        .header-strip {
+            position: absolute;
+            top: 1cm;
+            left: 2.5cm;
+            right: 2.5cm;
+            font-family: var(--font-head);
+            font-size: 9pt;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .footer-strip {
+            position: absolute;
+            bottom: 1cm;
+            left: 2.5cm;
+            right: 2.5cm;
+            font-family: var(--font-head);
+            font-size: 9pt;
+            color: #888;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* --- COVER PAGE (HALAMAN 1) --- */
+        .cover-page {
+            background: radial-gradient(circle at center, #2a2a2a 0%, #000000 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 10px solid var(--dark);
+        }
+
+        .cover-top {
+            font-family: var(--font-head);
+            font-size: 14pt;
+            color: #D4AF37; /* Gold */
+            letter-spacing: 4px;
+            margin-bottom: 2cm;
+            font-weight: 600;
+        }
+
+        .cover-title {
+            font-family: var(--font-title);
+            font-size: 90pt;
+            line-height: 0.9;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 1cm;
+            text-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+        }
+
+        .cover-subtitle {
+            font-family: var(--font-head);
+            font-weight: 300;
+            font-size: 16pt;
+            border-top: 1px solid #555;
+            border-bottom: 1px solid #555;
+            padding: 20px 0;
+            width: 80%;
+            margin-bottom: 4cm;
+        }
+
+        .cover-author {
+            font-size: 10pt;
+            color: #888;
+            letter-spacing: 1px;
+        }
+
+        /* --- HALF TITLE (HALAMAN 2) --- */
+        .half-title-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .half-title-text {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 24pt;
+            letter-spacing: 5px;
+            color: #333;
+        }
+
+        /* --- COPYRIGHT (HALAMAN 3) --- */
+        .copyright-page .content-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .disclaimer-box {
+            border-left: 4px solid var(--primary);
+            padding-left: 20px;
+            margin-top: 20px;
+            font-size: 9pt;
+            color: #555;
+        }
+
+        /* --- LETTER (HALAMAN 4) --- */
+        .author-sign {
+            font-family: var(--font-serif);
+            font-size: 20pt;
+            margin-top: 20px;
+            color: var(--primary);
+            font-style: italic;
+        }
+
+        /* --- TOC (HALAMAN 5) --- */
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 2cm;
+        }
+        .toc-section {
+            font-family: var(--font-head);
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 10pt;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 11pt;
+            font-weight: 600;
+        }
+        .toc-item span:first-child {
+            background: white;
+            padding-right: 5px;
+            z-index: 2;
+        }
+        .toc-line {
+            flex-grow: 1;
+            border-bottom: 2px dotted #ccc;
+            margin: 0 5px;
+            position: relative;
+            top: -5px;
+            z-index: 1;
+        }
+
+        /* --- CHAPTER HEADER STYLE --- */
+        .chapter-start {
+            margin-top: 3cm;
+            position: relative;
+            margin-bottom: 2cm;
+        }
+        .chapter-num {
+            position: absolute;
+            top: -60px;
+            left: -10px;
+            font-family: var(--font-title);
+            font-size: 120pt;
+            color: rgba(0,0,0,0.05);
+            z-index: 0;
+            line-height: 1;
+        }
+        .chapter-pre {
+            font-family: var(--font-head);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 12pt;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+        }
+        .chapter-main-title {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 32pt;
+            line-height: 1.1;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .chapter-sub {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 14pt;
+            color: #666;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- CONTENT BOXES --- */
+        .box-warning {
+            background: #FFF5F5;
+            border: 2px solid var(--primary);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .box-warning strong { color: var(--primary); text-transform: uppercase; }
+
+        .box-formula {
+            background: var(--dark);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-family: var(--font-head);
+        }
+        .box-formula h4 { color: var(--primary); margin-bottom: 10px; letter-spacing: 1px; }
+
+        .script-template {
+            background: #f0f2f5;
+            border-left: 5px solid #333;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            margin: 20px 0;
+        }
+
+        .drop-cap::first-letter {
+            float: left;
+            font-size: 3.5rem;
+            line-height: 0.8;
+            font-weight: bold;
+            color: var(--primary);
+            padding-right: 10px;
+            font-family: var(--font-title);
+        }
+
+        /* --- VISUAL ELEMENTS --- */
+        .funnel-step {
+            background: var(--light-gray);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+        }
+        .funnel-1 { width: 100%; background: #ddd; }
+        .funnel-2 { width: 80%; margin-left: 10%; background: #ccc; }
+        .funnel-3 { width: 60%; margin-left: 20%; background: var(--primary); color: white; }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 11pt;
+        }
+        .checklist-item i {
+            color: var(--accent);
+            margin-right: 10px;
+            font-size: 14pt;
+        }
+
+        /* --- BONUS PAGES (DARK MODE) --- */
+        .page-dark {
+            background: var(--gray);
+            color: #eee;
+        }
+        .page-dark .header-strip { border-bottom-color: #444; color: #666; }
+        .page-dark .footer-strip { color: #666; }
+        .page-dark h2 { color: var(--white); border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 5px; margin-bottom: 20px; }
+        .page-dark .box-warning { background: #330000; border-color: #ff3333; color: #fff; }
+        .page-dark .script-template { background: #2a2a2a; border-left-color: var(--primary); color: #ccc; }
+
+        /* Helpers */
+        .mt-4 { margin-top: 1.5rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        
+        @media print {
+            body { background: none; }
+            .page { margin: 0; box-shadow: none; page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page cover-page">
+        <div class="cover-top">
+            <i class="fas fa-crown"></i> STRATEGI TERBUKTI • EDISI 2026
+        </div>
+        <div class="cover-title">
+            THE 1:1<br>METHOD
+        </div>
+        <div class="cover-subtitle">
+            Blueprint Rahasia 1 Juta View & 1 Juta Subscriber dari NOL<br>
+            <strong>Satu Video. Satu Sistem. Jutaan Penonton.</strong>
+        </div>
+        <div class="cover-author">
+            <p>DITULIS OLEH:</p>
+            <h3 style="color: white; font-family: var(--font-head);">TUAN BAY</h3>
+            <p>Praktisi YouTube Shorts Growth</p>
+        </div>
+    </div>
+
+    <div class="page half-title-page">
+        <div class="half-title-text">THE 1:1 METHOD</div>
+    </div>
+
+    <div class="page copyright-page">
+        <div class="content-area">
+            <h3>Hak Cipta & Peringatan Penting</h3>
+            <p class="mt-4"><strong>© COPYRIGHT 2026 – TUAN BAY</strong></p>
+            <p>Seluruh materi dalam e-book ini dilindungi oleh undang-undang hak cipta. Dilarang keras menggandakan, menyebarluaskan, atau menjual kembali sebagian atau seluruh isi buku ini untuk keperluan komersial tanpa izin tertulis dari penulis.</p>
+            
+            <div class="disclaimer-box">
+                <strong>DISCLAIMER (PENOLAKAN JAMINAN):</strong><br>
+                Hasil yang dicapai setiap individu akan BERBEDA-BEDA. E-book ini berisi strategi berdasarkan pengalaman empiris dan analisis data. Keberhasilan mutlak bergantung pada eksekusi konsisten, adaptasi, kerja keras, dan faktor pasar yang tidak dapat dikendalikan sepenuhnya. Penulis tidak menjanjikan kekayaan instan. Buku ini adalah panduan strategis, bukan jaminan ajaib.
+            </div>
+            <div class="footer-strip">3</div>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">The 1:1 Method</div>
+        <div class="content-area">
+            <h2 style="font-family: var(--font-serif); font-style: italic; margin-bottom: 30px;">Untuk Anda yang Ingin Didengar,</h2>
+            
+            <p class="drop-cap">Tahun lalu, channel saya stuck di 1.000 subscriber selama 8 bulan. Saya upload setiap hari, tapi hasilnya nol. Saya hampir menyerah.</p>
+            
+            <p>Suatu hari, saya berhenti menebak-nebak. Saya menganalisis 500 video viral, merobek pola mereka, dan merangkainya menjadi satu sistem sederhana: <strong>1:1 METHOD.</strong></p>
+            
+            <p>Dalam 90 hari, channel saya meledak: <strong>1 juta view per hari, 100.000 subscriber baru.</strong></p>
+            
+            <p>Rahasianya bukan kerja keras buta, tapi kerja cerdas dengan sistem yang benar. E-book ini adalah sistem tersebut. Saya tuliskan semua tanpa sensor—dari fondasi mindset, teknik rahasia algoritma, hingga template script yang saya pakai sendiri.</p>
+            
+            <p>Masa depan konten Anda dimulai setelah halaman terakhir buku ini. Saat Anda memutuskan untuk bertindak.</p>
+            
+            <p class="mt-4">Mulailah.</p>
+            
+            <div class="author-sign">
+                Salam Hangat,<br>
+                Tuan Bay
+            </div>
+        </div>
+        <div class="footer-strip">4</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">The 1:1 Method</div>
+        <div class="content-area">
+            <h1 style="font-family: var(--font-head); font-size: 30pt; border-bottom: 4px solid var(--primary); display: inline-block; padding-bottom: 10px;">DAFTAR ISI</h1>
+
+            <ul class="toc-list">
+                <div class="toc-section">BAGIAN 1: MINDSET & FONDASI</div>
+                <li class="toc-item"><span>Bab 1: Fondasi 1:1 Method</span><div class="toc-line"></div><span>6</span></li>
+                <li class="toc-item"><span>Bab 2: Menentukan Niche</span><div class="toc-line"></div><span>7</span></li>
+
+                <div class="toc-section">BAGIAN 2: STRATEGI KREASI VIRAL</div>
+                <li class="toc-item"><span>Bab 3: Hook 2 Detik</span><div class="toc-line"></div><span>8</span></li>
+                <li class="toc-item"><span>Bab 4: Struktur Algoritma</span><div class="toc-line"></div><span>9</span></li>
+                <li class="toc-item"><span>Bab 5: Sistem Ide Konten</span><div class="toc-line"></div><span>10</span></li>
+
+                <div class="toc-section">BAGIAN 3: EKSEKUSI PRODUKSI</div>
+                <li class="toc-item"><span>Bab 6: Teknik Scripting</span><div class="toc-line"></div><span>11</span></li>
+                <li class="toc-item"><span>Bab 7: Workflow Batching</span><div class="toc-line"></div><span>12</span></li>
+
+                <div class="toc-section">BAGIAN 4: OPTIMASI & SKALING</div>
+                <li class="toc-item"><span>Bab 8: Membaca Analytics</span><div class="toc-line"></div><span>13</span></li>
+                <li class="toc-item"><span>Bab 9: Strategi Scale-Up</span><div class="toc-line"></div><span>14</span></li>
+                <li class="toc-item"><span>Bab 10: Monetisasi Nyata</span><div class="toc-line"></div><span>15</span></li>
+
+                <div class="toc-section">BONUS EKSKLUSIF</div>
+                <li class="toc-item"><span>Checklist Pra-Publish</span><div class="toc-line"></div><span>16</span></li>
+                <li class="toc-item"><span>Template & Roadmap</span><div class="toc-line"></div><span>17</span></li>
+            </ul>
+        </div>
+        <div class="footer-strip">5</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">Bagian 1: Mindset & Fondasi</div>
+        <div class="content-area">
+            <div class="chapter-start">
+                <div class="chapter-num">01</div>
+                <div class="chapter-pre">BAB SATU</div>
+                <h1 class="chapter-main-title">FONDASI 1:1 METHOD</h1>
+                <div class="chapter-sub">Memahami Mesin Pencetak View</div>
+            </div>
+
+            <p class="drop-cap">Filsafat dasar: YouTube bukan TV. YouTube adalah mesin rekomendasi raksasa yang satu-satunya tujuan adalah memaksimalkan waktu tonton pengguna. Titik.</p>
+
+            <h3 class="mt-4">Cara Algoritma Menilai Shorts:</h3>
+            <p>Jika video panjang dinilai dari CTR (Click-Through Rate), Shorts dinilai dari <strong>Swipe-Away Rate (SAR)</strong>.</p>
+
+            <div class="box-formula">
+                <h4 class="text-center"><i class="fas fa-filter"></i> PROSES SELEKSI VIRAL</h4>
+                <div class="funnel-step funnel-1">1. Tes Awal (100-500 Orang)</div>
+                <div style="text-align:center; font-size: 10px;">↓</div>
+                <div class="funnel-step funnel-2">2. Viewed Rate > 70%</div>
+                <div style="text-align:center; font-size: 10px;">↓</div>
+                <div class="funnel-step funnel-3">3. VIRAL (10k+ Penonton)</div>
+            </div>
+
+            <div class="box-warning">
+                <strong>⚠️ KESALAHAN FATAL PEMULA:</strong><br>
+                Membuka dengan: "Halo guys, apa kabar? Jangan lupa subscribe..."<br>
+                Di Shorts, 3 detik pertama adalah SEGALANYA. Penonton tidak peduli salam Anda. Mereka peduli: "Apa isi video ini untuk saya?"
+            </div>
+
+            <p class="text-center text-bold" style="border: 2px dashed #333; padding: 10px; margin-top: 30px;">
+                Rumus Inti 1:1 Method:<br>
+                <span class="text-red">1 Video Retention Tinggi + 1 Topik Spesifik = Ledakan Algoritma.</span>
+            </p>
+        </div>
+        <div class="footer-strip">6</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">Bagian 1: Mindset & Fondasi</div>
+        <div class="content-area">
+            <div class="chapter-start">
+                <div class="chapter-num">02</div>
+                <div class="chapter-pre">BAB DUA</div>
+                <h1 class="chapter-main-title">MEMILIH NICHE</h1>
+                <div class="chapter-sub">Menemukan "Tambang Emas" Anda</div>
+            </div>
+
+            <p><strong>Hukum Emas Niche:</strong> Spesifik > Populer. Semakin spesifik, semakin mudah algoritma mengenali audiens Anda.</p>
+
+            <h3>Peta Jalan Memilih Niche:</h3>
+            <ol>
+                <li><strong>Passion/Skill:</strong> Apa yang Anda kuasai? (Masak, Coding, Investasi).</li>
+                <li><strong>Validasi Pasar:</strong> Ada yang mau bayar? Cek produk di marketplace.</li>
+                <li><strong>Validasi Konten:</strong> Search di YouTube. Filter "Shorts" & "This Month". <br>
+                <span class="text-red">Indikator Hijau:</span> Ada min. 5 video dengan view > 500k.</li>
+            </ol>
+
+            <div class="box-formula" style="background: #f9f9f9; color: #333; border: 1px solid #ddd;">
+                <h4 style="color: var(--dark);">FACELESS VS PERSONAL BRAND</h4>
+                <table style="width: 100%; font-size: 10pt; text-align: left;">
+                    <tr style="border-bottom: 1px solid #ccc;">
+                        <th style="padding: 5px;">Tipe</th>
+                        <th>Kelebihan</th>
+                        <th>Niche Cocok</th>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">Faceless</td>
+                        <td>Privasi, Skalabel</td>
+                        <td>Fakta, ASMR, Cerita</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">Personal</td>
+                        <td>Trust Tinggi, Mudah Jualan</td>
+                        <td>Edukasi, Motivasi</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p><strong>💎 TIP TAJAM:</strong> Gabungkan! Buat channel faceless untuk uji pasar. Setelah ada video viral, reveal diri Anda untuk menciptakan momentum besar.</p>
+        </div>
+        <div class="footer-strip">7</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">Bagian 2: Strategi Kreasi</div>
+        <div class="content-area">
+            <div class="chapter-start">
+                <div class="chapter-num">03</div>
+                <div class="chapter-pre">BAB TIGA</div>
+                <h1 class="chapter-main-title">HOOK 2 DETIK</h1>
+                <div class="chapter-sub">Seni Menghentikan Jempol</div>
+            </div>
+
+            <p class="drop-cap">Hook adalah kontrak. Dalam 2 detik, Anda harus menjanjikan nilai.</p>
+
+            <div class="box-formula">
+                <h4 style="text-align: center;">TRINITAS HOOK MEMATIKAN</h4>
+                <div style="display: flex; justify-content: space-around; text-align: center; margin-top: 15px;">
+                    <div>
+                        <i class="fas fa-eye fa-2x text-red"></i><br>VISUAL<br><small>Gerakan Cepat</small>
+                    </div>
+                    <div>
+                        <i class="fas fa-volume-up fa-2x text-red"></i><br>AUDIO<br><small>Suara Keras</small>
+                    </div>
+                    <div>
+                        <i class="fas fa-font fa-2x text-red"></i><br>TEKS<br><small>Judul Provokatif</small>
+                    </div>
+                </div>
+            </div>
+
+            <h3>7 Formula Hook Terbukti (Copy-Paste):</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li class="mb-2"><span class="text-red text-bold">1. Negative Warning:</span> "Jangan pernah transfer uang sebelum cek ini."</li>
+                <li class="mb-2"><span class="text-red text-bold">2. The Secret:</span> "Rahasia diet artis yang disembunyikan..."</li>
+                <li class="mb-2"><span class="text-red text-bold">3. Specific Result:</span> "Cara saya dapat 10 Juta dalam 3 hari..."</li>
+                <li class="mb-2"><span class="text-red text-bold">4. Counter-Intuitive:</span> "Kenapa Nabung itu SALAH?"</li>
+                <li class="mb-2"><span class="text-red text-bold">5. Challenge:</span> "Bisakah saya makan pedas level 100?"</li>
+                <li class="mb-2"><span class="text-red text-bold">6. Comparison:</span> "HP 1 Juta vs HP 20 Juta."</li>
+                <li class="mb-2"><span class="text-red text-bold">7. Bold Statement:</span> "Ini skill terpenting di 2026."</li>
+            </ul>
+        </div>
+        <div class="footer-strip">8</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">Bagian 2: Strategi Kreasi</div>
+        <div class="content-area">
+            <div class="chapter-start">
+                <div class="chapter-num">04</div>
+                <div class="chapter-pre">BAB EMPAT</div>
+                <h1 class="chapter-main-title">STRUKTUR ALGORITMA</h1>
+                <div class="chapter-sub">Arsitektur Video Viral 60 Detik</div>
+            </div>
+
+            <p>Video pendek terbaik berbentuk loop emosional. Berikut anatominya:</p>
+
+            <div style="border-left: 4px solid var(--primary); padding-left: 20px;">
+                <h3 class="text-red">1. DETIK 0-3: THE HOOK</h3>
+                <p>Tugas: Berikan masalah atau janji.<br>
+                <em>Visual: Ekspresi kaget + Teks "GAK PAHAM EXCEL?"</em></p>
+
+                <h3 class="text-red">2. DETIK 3-45: THE VALUE</h3>
+                <p>Tugas: Solusi langkah demi langkah.<br>
+                <em>Teknik: Cut setiap 2-3 detik. Jangan ada adegan diam. Pacing cepat.</em></p>
+
+                <h3 class="text-red">3. DETIK 45-55: THE TWIST</h3>
+                <p>Tugas: Bonus tips atau fakta mengejutkan.<br>
+                <em>"Ngomong-ngomong, trik ini juga bisa dipakai untuk..."</em></p>
+
+                <h3 class="text-red">4. DETIK 55-60: THE LOOP</h3>
+                <p>Tugas: Buat penonton mengulang video.<br>
+                <em>Akhir: "...itulah sebabnya..."<br>
+                Awal (Hook): "KENAPA KAMU GAGAL."</em></p>
+            </div>
+        </div>
+        <div class="footer-strip">9</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">Bagian 2: Strategi Kreasi</div>
+        <div class="content-area">
+            <div class="chapter-start">
+                <div class="chapter-num">05</div>
+                <div class="chapter-pre">BAB LIMA</div>
+                <h1 class="chapter-main-title">SISTEM IDE KONTEN</h1>
+                <div class="chapter-sub">Bank Ide Tanpa Buntu</div>
+            </div>
+
+            <div class="box-formula">
+                <h4>METODE ATM (Amati, Tiru, Modifikasi)</h4>
+                <p style="margin:0;">1. Amati: Buka 5 channel top kompetitor.<br>
+                2. Tiru: Catat Topik & Hook video terpopuler mereka.<br>
+                3. Modifikasi: Ubah sudut pandang, edit lebih bagus, tambah value 10%.</p>
+            </div>
+
+            <h3>Framework: The Content Tree</h3>
+            <p>Ambil 1 Topik Viral (Cth: "Cepat Kaya"), cabangkan:</p>
+            <ul>
+                <li><strong>Dasar:</strong> Cara Cepat Kaya untuk Pemula.</li>
+                <li><strong>Spesifik:</strong> Cepat Kaya dari Jualan Online.</li>
+                <li><strong>Bertentangan:</strong> Bahaya Ingin Cepat Kaya.</li>
+                <li><strong>Story:</strong> Pengalaman Saya Gagal Cepat Kaya.</li>
+            </ul>
+
+            <div class="box-warning" style="background: #eef; border-color: #007bff;">
+                <strong style="color: #007bff;">📊 JADWAL RISET MINGGUAN:</strong>
+                <ul style="margin-bottom: 0;">
+                    <li>Senin: Riset Trending Topik.</li>
+                    <li>Rabu: Analisis Kompetitor.</li>
+                    <li>Jumat: Brainstorm 10 Ide via Content Tree.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-strip">10</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">Bagian 3: Eksekusi Produksi</div>
+        <div class="content-area">
+            <div class="chapter-start">
+                <div class="chapter-num">06</div>
+                <div class="chapter-pre">BAB ENAM</div>
+                <h1 class="chapter-main-title">TEKNIK SCRIPTING</h1>
+            </div>
+
+            <p>Template ini saya pakai setiap hari untuk konversi View ke Subscriber.</p>
+
+            <div class="script-template">
+                <strong>TEMPLATE: Problem-Solution-Benefit (60s)</strong><br><br>
+                
+                <span class="text-red">[00-03s] HOOK (Visual: Wajah Bingung)</span><br>
+                "Pernah nggak sih ngerasa [MASALAH]? Udah coba semua tapi gagal?"<br>
+                <em>(Teks: GAK SEMUDAH ITU?)</em><br><br>
+
+                <span class="text-red">[03-10s] JANJI SOLUSI</span><br>
+                "Sebenernya ada 1 kesalahan kecil. Hari ini saya kasih tau triknya..."<br><br>
+
+                <span class="text-red">[10-40s] VALUE (Visual: Demo Cepat)</span><br>
+                "Langkah 1: [Aksi A]. Liat ini kuncinya...<br>
+                Langkah 2: [Aksi B]. Jangan lewatin ini...<br>
+                Langkah 3: [Aksi C]. Di sini keajaibannya."<br><br>
+
+                <span class="text-red">[40-55s] REINFORCEMENT (Visual: Hasil)</span><br>
+                "Kalau ditambah [BONUS TIP], hasilnya bisa 2x lipat. Gila kan?"<br><br>
+
+                <span class="text-red">[55-60s] CTA & LOOP</span><br>
+                "Follow biar skill kamu naik level. Soalnya..." -> (LOOP KE AWAL)
+            </div>
+        </div>
+        <div class="footer-strip">11</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">Bagian 3: Eksekusi Produksi</div>
+        <div class="content-area">
+            <div class="chapter-start">
+                <div class="chapter-num">07</div>
+                <div class="chapter-pre">BAB TUJUH</div>
+                <h1 class="chapter-main-title">WORKFLOW BATCHING</h1>
+                <div class="chapter-sub">1 Minggu dalam 3 Jam</div>
+            </div>
+
+            <p>Sistem 1-3-1 (Untuk Karyawan/Pelajar):</p>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <div style="flex:1; background:#f5f5f5; padding: 15px; border-top: 3px solid var(--primary);">
+                    <h4 class="text-red">HARI 1 (1 Jam)</h4>
+                    <strong>Perencanaan</strong><br>
+                    Riset & Tulis 5-7 Script lengkap.
+                </div>
+                <div style="flex:1; background:#f5f5f5; padding: 15px; border-top: 3px solid var(--primary);">
+                    <h4 class="text-red">HARI 2 (1 Jam)</h4>
+                    <strong>Produksi</strong><br>
+                    Rekam SEMUA video sekaligus (Back-to-back).
+                </div>
+                <div style="flex:1; background:#f5f5f5; padding: 15px; border-top: 3px solid var(--primary);">
+                    <h4 class="text-red">HARI 3 (1 Jam)</h4>
+                    <strong>Editing</strong><br>
+                    Edit pakai preset & Jadwalkan upload.
+                </div>
+            </div>
+
+            <h3 class="mt-4">Mental Hadapi "Zero View":</h3>
+            <p>Itu NORMAL. Jangan hapus video! Jika setelah 72 jam masih nol, kemungkinan:</p>
+            <ol>
+                <li>Hook tidak menarik (Swipe-Away tinggi).</li>
+                <li>Topik terlalu jenuh.</li>
+                <li>Pelanggaran guideline.</li>
+            </ol>
+        </div>
+        <div class="footer-strip">12</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">Bagian 4: Optimasi & Skaling</div>
+        <div class="content-area">
+            <div class="chapter-start">
+                <div class="chapter-num">08</div>
+                <div class="chapter-pre">BAB DELAPAN</div>
+                <h1 class="chapter-main-title">MEMBACA ANALYTICS</h1>
+                <div class="chapter-sub">Jadi Dokter Channel Anda</div>
+            </div>
+
+            <p>Fokus pada <strong>RETENTION GRAPH</strong> di YouTube Studio.</p>
+
+            <div style="margin: 20px 0;">
+                <div style="margin-bottom: 15px;">
+                    <strong>1. Grafik Datar Tinggi (Ideal) <i class="fas fa-check-circle text-red"></i></strong><br>
+                    Penonton bertahan sampai akhir. Pertahankan formula ini!
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>2. Penurunan Tajam di Awal (Hook Gagal) <i class="fas fa-times-circle"></i></strong><br>
+                    >40% kabur di 3 detik pertama. Ganti strategi hook/opening.
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>3. Lonjakan (Spike) <i class="fas fa-bolt text-red"></i></strong><br>
+                    Momen Emas! Penonton mengulang bagian ini. Analisis apa yang terjadi (lucu/penting) dan ulangi di video lain.
+                </div>
+            </div>
+
+            <div class="box-warning">
+                <strong>METRIK PENTING LAIN:</strong><br>
+                Targetkan Like vs View Ratio > 5%.<br>
+                Jika View tinggi tapi Like rendah = Konten engaging tapi kurang bernilai/relatable.
+            </div>
+        </div>
+        <div class="footer-strip">13</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">Bagian 4: Optimasi & Skaling</div>
+        <div class="content-area">
+            <div class="chapter-start">
+                <div class="chapter-num">09</div>
+                <div class="chapter-pre">BAB SEMBILAN</div>
+                <h1 class="chapter-main-title">STRATEGI SCALE-UP</h1>
+                <div class="chapter-sub">Menuju 1 Juta Subscriber</div>
+            </div>
+
+            <h3>Fase 1 (0-10k Subs): Double Down</h3>
+            <p>Identifikasi 3 video terpopuler. Buat serial (Part 2, Part 3). Gunakan Community Tab untuk menjaga interaksi.</p>
+
+            <h3>Fase 2 (50k Subs): Cross-Platform</h3>
+            <p>Reupload Shorts (tanpa watermark) ke TikTok & Reels. Gunakan caption: "Full tutorial di YouTube @NamaChannel".</p>
+
+            <h3>Fase 3 (100k+ Subs): Funneling</h3>
+            <p>Alihkan traffic Shorts ke Video Panjang (Long Form) untuk Adsense lebih besar. <br>
+            <em>Call to Action: "Penjelasan detail 5 menit ada di video terkait/link di bio."</em></p>
+        </div>
+        <div class="footer-strip">14</div>
+    </div>
+
+    <div class="page">
+        <div class="header-strip">Bagian 4: Optimasi & Skaling</div>
+        <div class="content-area">
+            <div class="chapter-start">
+                <div class="chapter-num">10</div>
+                <div class="chapter-pre">BAB SEPULUH</div>
+                <h1 class="chapter-main-title">MONETISASI NYATA</h1>
+                <div class="chapter-sub">Ubah Kreativitas Jadi Cashflow</div>
+            </div>
+
+            <p>Lupakan Adsense Shorts (Kecil). Fokus pada 4 Pilar:</p>
+
+            <div class="box-formula" style="background: white; border: 2px solid #333; color: #333;">
+                <h4 class="text-red">1. AFFILIATE MARKETING (Tercepat)</h4>
+                <p>Review produk unik < 200rb. Taruh link di Pinned Comment.</p>
+                <hr>
+                <h4 class="text-red">2. DIGITAL PRODUCTS (Margin 100%)</h4>
+                <p>Jual E-book, Template, atau Kursus Mini. Promosikan lewat Shorts.</p>
+                <hr>
+                <h4 class="text-red">3. BRAND DEAL</h4>
+                <p>Rate card standar: Rp 5-10jt per video untuk 100k subs.</p>
+            </div>
+        </div>
+        <div class="footer-strip">15</div>
+    </div>
+
+    <div class="page page-dark">
+        <div class="header-strip">Bonus Eksklusif</div>
+        <div class="content-area">
+            <h1 style="font-family: var(--font-title); font-size: 3rem; color: var(--primary);">CHECKLIST FINAL</h1>
+            <p>Centang semua sebelum tekan "Publish":</p>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-top: 20px;">
+                <h3 style="color:white; margin-bottom: 15px;">VISUAL & AUDIO</h3>
+                <div class="checklist-item"><i class="fas fa-square"></i> Ada gerakan/aksi di detik 0-3?</div>
+                <div class="checklist-item"><i class="fas fa-square"></i> Suara JELAS > Musik latar?</div>
+                <div class="checklist-item"><i class="fas fa-square"></i> Subtitle/Caption sudah benar?</div>
+                <div class="checklist-item"><i class="fas fa-square"></i> Teks tidak tertutup tombol Like?</div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-top: 20px;">
+                <h3 style="color:white; margin-bottom: 15px;">STRUKTUR</h3>
+                <div class="checklist-item"><i class="fas fa-square"></i> Hook menggunakan Trinitas?</div>
+                <div class="checklist-item"><i class="fas fa-square"></i> Ada Twist/Bonus di akhir?</div>
+                <div class="checklist-item"><i class="fas fa-square"></i> Video bisa di-loop?</div>
+            </div>
+        </div>
+        <div class="footer-strip">16</div>
+    </div>
+
+    <div class="page page-dark">
+        <div class="header-strip">Bonus Eksklusif</div>
+        <div class="content-area">
+            <h2 style="color: var(--primary);">5 HOOK CADANGAN</h2>
+            <ul style="margin-bottom: 40px;">
+                <li class="mb-2">"Stop Using [Common Tool]! Do This Instead..."</li>
+                <li class="mb-2">"The Dark Truth About [Trend] Nobody Tells You."</li>
+                <li class="mb-2">"I Tried [Challenge] for 7 Days. Here's Result."</li>
+                <li class="mb-2">"[Number] Signs You're Actually Good at [Skill]."</li>
+                <li class="mb-2">"This [Simple Object] Can Save Your Life."</li>
+            </ul>
+
+            <h2 style="color: var(--primary);">ROADMAP 90 HARI</h2>
+            <div style="border-left: 2px solid var(--primary); padding-left: 20px;">
+                <p><strong>BULAN 1: TESTING</strong><br>Upload 1 Shorts/hari. Fokus Hook. Cari Retention > 70%.</p>
+                <p><strong>BULAN 2: PATTERN</strong><br>Double down di topik sukses. Pakai Batching System.</p>
+                <p><strong>BULAN 3: MONETIZE</strong><br>Mulai Affiliate/Jualan. Target 1.000 Subs.</p>
+            </div>
+        </div>
+        <div class="footer-strip">17</div>
+    </div>
+
+    <div class="page">
+        <div class="content-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <h1 style="font-family: var(--font-title); font-size: 4rem; margin-bottom: 20px;">GILIRAN ANDA</h1>
+            
+            <p style="font-size: 14pt; width: 80%;">
+                E-book ini hanyalah kumpulan teori jika tidak dijalankan. Video pertama Anda akan jelek. Video ke-100 akan luar biasa. Itu hukumnya.
+            </p>
+
+            <div class="box-warning" style="background: white; border: 3px dashed var(--primary);">
+                <h3>CHALLENGE 7 HARI:</h3>
+                <p>Ambil HP Anda sekarang. Rekam video pertama. Upload.<br>
+                Jangan overthinking. Lakukan saja.</p>
+            </div>
+
+            <p style="margin-top: 3cm;">Sampai jumpa di 1 Juta Subscriber!</p>
+            <h2 style="font-family: var(--font-head);">TUAN BAY</h2>
+            
+            <div style="margin-top: 20px;">
+                <i class="fab fa-youtube fa-2x" style="margin: 0 10px;"></i>
+                <i class="fab fa-instagram fa-2x" style="margin: 0 10px;"></i>
+                <i class="fab fa-tiktok fa-2x" style="margin: 0 10px;"></i>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
